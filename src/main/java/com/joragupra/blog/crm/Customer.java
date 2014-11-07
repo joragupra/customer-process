@@ -1,5 +1,7 @@
 package com.joragupra.blog.crm;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 public class Customer {
@@ -22,7 +24,9 @@ public class Customer {
     }
 
     public boolean isSenior() {
-        return false;
+        return LocalDate.now().isAfter(
+                createdAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusYears(1)
+        );
     }
 
 }
