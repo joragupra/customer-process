@@ -39,7 +39,7 @@ public class Customer {
     }
 
     public void buy(String productCode) {
-
+        purchases.add(new Product(productCode, new Date()));
     }
 
 }
