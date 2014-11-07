@@ -1,5 +1,7 @@
 package com.joragupra.blog.crm;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 public class Product {
@@ -22,6 +24,9 @@ public class Product {
     }
 
     public boolean isRecent() {
-        return false;
+        return purchasedAt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().isAfter(
+                LocalDate.now().minusMonths(1)
+        );
     }
+    
 }
