@@ -42,4 +42,8 @@ public class Customer {
         purchases.add(new Product(productCode, new Date()));
     }
 
+    public boolean isSpecialOffersEligible() {
+        return false;
+    }
+
 }

@@ -53,4 +53,29 @@ public class CustomerTest {
         );
     }
 
+    @Test
+    public void testIsSpecialOffersEligible_SeniorsUsersAreEligible() {
+        Date moreThanOneYearAgo = Date.from(
+                LocalDateTime.now().minusDays(366).atZone(ZoneId.systemDefault()).toInstant()
+        );
+        Customer oldCustomer = new Customer("00001", moreThanOneYearAgo);
+        String aProductCode = "00001";
+        String anotherProductCode = "00002";
+        oldCustomer.buy(aProductCode);
+        oldCustomer.buy(anotherProductCode);
+
+        assertThat(oldCustomer.isSpecialOffersEligible(), is(true));
+    }
+
+    @Test
+    public void testIsSpecialOffersEligible_NewUsersNotEligible() {
+        Customer newCustomer = new Customer("00001", new Date());
+        String aProductCode = "00001";
+        String anotherProductCode = "00002";
+        newCustomer.buy(aProductCode);
+        newCustomer.buy(anotherProductCode);
+
+        assertThat(newCustomer.isSpecialOffersEligible(), is(false));
+    }
+
 }
