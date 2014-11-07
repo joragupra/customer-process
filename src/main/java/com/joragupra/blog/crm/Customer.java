@@ -43,7 +43,7 @@ public class Customer {
     }
 
     public boolean isSpecialOffersEligible() {
-        return false;
+        return isSenior();
     }
 
 }
