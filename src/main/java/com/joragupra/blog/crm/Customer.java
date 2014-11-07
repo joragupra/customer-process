@@ -24,4 +24,5 @@ public class Customer {
     public boolean isSenior() {
         return false;
     }
+
 }
