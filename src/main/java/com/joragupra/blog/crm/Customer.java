@@ -1,5 +1,7 @@
 package com.joragupra.blog.crm;
 
+import com.joragupra.blog.utils.time.TimeProvider;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -39,7 +41,7 @@ public class Customer {
     }
 
     public void buy(String productCode) {
-        purchases.add(new Product(productCode, new Date()));
+        purchases.add(new Product(productCode, TimeProvider.now()));
     }
 
     public boolean isSpecialOffersEligible() {
