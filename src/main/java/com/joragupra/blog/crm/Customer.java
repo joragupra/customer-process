@@ -43,7 +43,11 @@ public class Customer {
     }
 
     public boolean isSpecialOffersEligible() {
-        return isSenior();
+        return isSenior() && purchasedSomethingRecently();
+    }
+
+    private boolean purchasedSomethingRecently() {
+        return purchases.stream().anyMatch( p -> p.isRecent() );
     }
 
 }

@@ -35,5 +35,5 @@ public class Product {
     void setPurchasedAt(Date newPurchaseDate) {
         this.purchasedAt = newPurchaseDate;
     }
-    
+
 }
