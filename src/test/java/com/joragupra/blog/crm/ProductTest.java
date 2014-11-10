@@ -1,10 +1,10 @@
 package com.joragupra.blog.crm;
 
+import com.joragupra.blog.utils.time.TimeMachine;
+import com.joragupra.blog.utils.time.TimeProvider;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
@@ -13,17 +13,20 @@ public class ProductTest {
 
     @Test
     public void testIsRecentPurchase() {
-        Date moreThanOneMonthAgo = Date.from(
-                LocalDateTime.now().minusDays(32).atZone(ZoneId.systemDefault()).toInstant()
-        );
-        Product oldPurchase = new Product("00001", moreThanOneMonthAgo);
+        LocalDateTime moreThanOneMonthAgo = LocalDateTime.now().minusDays(32);
+        TimeMachine.goTo(moreThanOneMonthAgo);
+
+        Product oldPurchase = new Product("00001", TimeProvider.now());
 
         assertThat(
                 "A purchase done more than one month ago should not be considered a recent purchase",
                 oldPurchase.isRecent(), is(false)
         );
 
-        Product newPurchase = new Product("00002", new Date());
+        LocalDateTime oneWeekAgo = LocalDateTime.now().minusWeeks(1);
+        TimeMachine.goTo(oneWeekAgo);
+
+        Product newPurchase = new Product("00002", TimeProvider.now());
 
         assertThat("A purchase done right now is a recent purchase", newPurchase.isRecent(), is(true));
     }

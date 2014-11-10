@@ -6,8 +6,6 @@ import org.junit.After;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
@@ -21,17 +19,17 @@ public class CustomerTest {
 
     @Test
     public void testIsSeniorCustomer() {
-        Date moreThanOneYearAgo = Date.from(
-                LocalDateTime.now().minusDays(366).atZone(ZoneId.systemDefault()).toInstant()
-        );
-        Customer oldCustomer = new Customer("00001", moreThanOneYearAgo);
+        LocalDateTime moreThanOneYearAgo = LocalDateTime.now().minusDays(366);
+        TimeMachine.goTo(moreThanOneYearAgo);
+        Customer oldCustomer = new Customer("00001", TimeProvider.now());
 
         assertThat(
                 "Customer created more than one year ago should be senior", oldCustomer.isSenior(),
                 is(true)
         );
 
-        Customer newCustomer = new Customer("00002", new Date());
+        TimeMachine.goTo(LocalDateTime.now());
+        Customer newCustomer = new Customer("00002", TimeProvider.now());
 
         assertThat(
                 "Customer created right now should not be considered senior",
@@ -43,7 +41,7 @@ public class CustomerTest {
     public void testBuy() {
         String aProductCode = "00001";
         String anotherProductCode = "00002";
-        Customer customer = new Customer("00001", new Date());
+        Customer customer = new Customer("00001", TimeProvider.now());
 
         customer.buy(aProductCode);
         customer.buy(anotherProductCode);
@@ -62,10 +60,11 @@ public class CustomerTest {
 
     @Test
     public void testIsSpecialOffersEligible_SeniorsUsersWithRecentPurchasesAreEligible() {
-        Date moreThanOneYearAgo = Date.from(
-                LocalDateTime.now().minusDays(366).atZone(ZoneId.systemDefault()).toInstant()
-        );
-        Customer oldCustomer = new Customer("00001", moreThanOneYearAgo);
+        LocalDateTime moreThanOneYearAgo = LocalDateTime.now().minusDays(366);
+        TimeMachine.goTo(moreThanOneYearAgo);
+        Customer oldCustomer = new Customer("00001", TimeProvider.now());
+        LocalDateTime oneWeekAgo = LocalDateTime.now().minusWeeks(1);
+        TimeMachine.goTo(oneWeekAgo);
         String aProductCode = "00001";
         String anotherProductCode = "00002";
         oldCustomer.buy(aProductCode);
@@ -93,7 +92,7 @@ public class CustomerTest {
 
     @Test
     public void testIsSpecialOffersEligible_NewUsersNotEligible() {
-        Customer newCustomer = new Customer("00001", new Date());
+        Customer newCustomer = new Customer("00001", TimeProvider.now());
         String aProductCode = "00001";
         String anotherProductCode = "00002";
         newCustomer.buy(aProductCode);
