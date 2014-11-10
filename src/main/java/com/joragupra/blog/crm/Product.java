@@ -28,5 +28,12 @@ public class Product {
                 LocalDate.now().minusMonths(1)
         );
     }
+
+    /**
+     * Only for testing purposes.
+     */
+    void setPurchasedAt(Date newPurchaseDate) {
+        this.purchasedAt = newPurchaseDate;
+    }
     
 }

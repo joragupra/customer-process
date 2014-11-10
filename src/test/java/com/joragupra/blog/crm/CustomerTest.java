@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.function.Predicate;
 
 import static org.hamcrest.MatcherAssert.*;
@@ -54,7 +55,7 @@ public class CustomerTest {
     }
 
     @Test
-    public void testIsSpecialOffersEligible_SeniorsUsersAreEligible() {
+    public void testIsSpecialOffersEligible_SeniorsUsersWithRecentPurchasesAreEligible() {
         Date moreThanOneYearAgo = Date.from(
                 LocalDateTime.now().minusDays(366).atZone(ZoneId.systemDefault()).toInstant()
         );
@@ -65,6 +66,31 @@ public class CustomerTest {
         oldCustomer.buy(anotherProductCode);
 
         assertThat(oldCustomer.isSpecialOffersEligible(), is(true));
+    }
+
+    @Test
+    public void testIsSpecialOffersEligible_SeniorsUsersWithNoRecentPurchaseAreNotEligible() {
+        Date moreThanOneYearAgo = Date.from(
+                LocalDateTime.now().minusDays(366).atZone(ZoneId.systemDefault()).toInstant()
+        );
+        Customer oldCustomer = new Customer("00001", moreThanOneYearAgo);
+        String aProductCode = "00001";
+        String anotherProductCode = "00002";
+        oldCustomer.buy(aProductCode);
+        oldCustomer.buy(anotherProductCode);
+        Iterator<Product> boughtProducts = oldCustomer.boughtProducts().iterator();
+        boughtProducts.next().setPurchasedAt(
+                Date.from(
+                        LocalDateTime.now().minusDays(40).atZone(ZoneId.systemDefault()).toInstant()
+                )
+        );
+        boughtProducts.next().setPurchasedAt(
+                Date.from(
+                        LocalDateTime.now().minusDays(35).atZone(ZoneId.systemDefault()).toInstant()
+                )
+        );
+
+        assertThat(oldCustomer.isSpecialOffersEligible(), is(false));
     }
 
     @Test
