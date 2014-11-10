@@ -29,11 +29,4 @@ public class Product {
         );
     }
 
-    /**
-     * Only for testing purposes.
-     */
-    void setPurchasedAt(Date newPurchaseDate) {
-        this.purchasedAt = newPurchaseDate;
-    }
-
 }

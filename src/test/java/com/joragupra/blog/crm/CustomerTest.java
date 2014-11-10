@@ -1,17 +1,23 @@
 package com.joragupra.blog.crm;
 
+import com.joragupra.blog.utils.time.TimeMachine;
+import com.joragupra.blog.utils.time.TimeProvider;
+import org.junit.After;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.function.Predicate;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
 public class CustomerTest {
+
+    @After
+    public void tearDown() {
+        TimeMachine.reset();
+    }
 
     @Test
     public void testIsSeniorCustomer() {
@@ -70,25 +76,17 @@ public class CustomerTest {
 
     @Test
     public void testIsSpecialOffersEligible_SeniorsUsersWithNoRecentPurchaseAreNotEligible() {
-        Date moreThanOneYearAgo = Date.from(
-                LocalDateTime.now().minusDays(366).atZone(ZoneId.systemDefault()).toInstant()
-        );
-        Customer oldCustomer = new Customer("00001", moreThanOneYearAgo);
+        LocalDateTime moreThanOneYearAgo = LocalDateTime.now().minusDays(366);
+        LocalDateTime fortyDaysAgo = LocalDateTime.now().minusDays(40);
+        LocalDateTime thirtyFiveDaysAgo = LocalDateTime.now().minusDays(35);
+        TimeMachine.goTo(moreThanOneYearAgo);
+        Customer oldCustomer = new Customer("00001", TimeProvider.now());
+        TimeMachine.goTo(fortyDaysAgo);
         String aProductCode = "00001";
-        String anotherProductCode = "00002";
         oldCustomer.buy(aProductCode);
+        TimeMachine.goTo(thirtyFiveDaysAgo);
+        String anotherProductCode = "00002";
         oldCustomer.buy(anotherProductCode);
-        Iterator<Product> boughtProducts = oldCustomer.boughtProducts().iterator();
-        boughtProducts.next().setPurchasedAt(
-                Date.from(
-                        LocalDateTime.now().minusDays(40).atZone(ZoneId.systemDefault()).toInstant()
-                )
-        );
-        boughtProducts.next().setPurchasedAt(
-                Date.from(
-                        LocalDateTime.now().minusDays(35).atZone(ZoneId.systemDefault()).toInstant()
-                )
-        );
 
         assertThat(oldCustomer.isSpecialOffersEligible(), is(false));
     }
