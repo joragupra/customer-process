@@ -19,7 +19,7 @@ public class CustomerTest {
 
     @Test
     public void testIsSeniorCustomer() {
-        LocalDateTime moreThanOneYearAgo = LocalDateTime.now().minusDays(366);
+        LocalDateTime moreThanOneYearAgo = LocalDateTime.now().minusDays(367);
         TimeMachine.goTo(moreThanOneYearAgo);
         Customer oldCustomer = new Customer("00001", TimeProvider.now());
 
@@ -60,7 +60,7 @@ public class CustomerTest {
 
     @Test
     public void testIsSpecialOffersEligible_SeniorsUsersWithRecentPurchasesAreEligible() {
-        LocalDateTime moreThanOneYearAgo = LocalDateTime.now().minusDays(366);
+        LocalDateTime moreThanOneYearAgo = LocalDateTime.now().minusDays(367);
         TimeMachine.goTo(moreThanOneYearAgo);
         Customer oldCustomer = new Customer("00001", TimeProvider.now());
         LocalDateTime oneWeekAgo = LocalDateTime.now().minusWeeks(1);
@@ -75,7 +75,7 @@ public class CustomerTest {
 
     @Test
     public void testIsSpecialOffersEligible_SeniorsUsersWithNoRecentPurchaseAreNotEligible() {
-        LocalDateTime moreThanOneYearAgo = LocalDateTime.now().minusDays(366);
+        LocalDateTime moreThanOneYearAgo = LocalDateTime.now().minusDays(367);
         LocalDateTime fortyDaysAgo = LocalDateTime.now().minusDays(40);
         LocalDateTime thirtyFiveDaysAgo = LocalDateTime.now().minusDays(35);
         TimeMachine.goTo(moreThanOneYearAgo);
